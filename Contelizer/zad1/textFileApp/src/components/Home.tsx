@@ -1,76 +1,32 @@
 import React, { useState } from "react";
 import FileSaver from "file-saver";
 
-// function shuffleString(str: string): string {
-//   if (!str) return "";
-//   return str
-//     .split("")
-//     .sort(() => 0.5 - Math.random())
-//     .join("");
-// }
-
 export default function Home() {
   const [text, setText] = useState<string>("");
 
-  //   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-  //     e.preventDefault();
-  //     if (!text) return;
-
-  //     const lines = text.split(/\r?\n/);
-  //     console.log(lines);
-
-  //     let finalLines: string[];
-
-  //     if (lines.length === 1) {
-  //       const line = lines[0];
-  //       const firstChar = line.slice(0, 1);
-  //       const middlePart = line.slice(1, -1);
-  //       const lastChar = line.slice(-1);
-
-  //       const shuffledMiddle = shuffleString(middlePart);
-  //       finalLines = [firstChar + shuffledMiddle + lastChar];
-  //     } else {
-  //       const firstLine = lines[0];
-  //       const lastLine = lines[lines.length - 1];
-  //       const middleLines = lines.slice(1, -1);
-
-  //       const firstChar = firstLine.slice(0, 1);
-  //       const restOfFirstLine = firstLine.slice(1);
-  //       const shuffledFirstLine = firstChar + shuffleString(restOfFirstLine);
-
-  //       const beginningOfLastLine = lastLine.slice(0, -1);
-  //       const lastChar = lastLine.slice(-1);
-  //       const shuffledLastLine = shuffleString(beginningOfLastLine) + lastChar;
-
-  //       const shuffledMiddleLines = middleLines.map(shuffleString);
-
-  //       finalLines = [
-  //         shuffledFirstLine,
-  //         ...shuffledMiddleLines,
-  //         shuffledLastLine,
-  //       ];
-  //     }
-
-  //     setText(finalLines.join("\n"));
-  //   }
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!text) return;
-
+  const shuffleLetters = (text: string): string => {
     const firstLetter = text.slice(0, 1);
     const middle = text.slice(1, -1);
     const lastLetter = text.slice(-1);
 
     const spacedMiddle = middle.split(/\r?\n/);
-    const fixed = spacedMiddle.map((word) =>
+    const newMiddle = spacedMiddle.map((word) =>
       word
         .split("")
         .sort(() => 0.5 - Math.random())
         .join("")
     );
-    setText(firstLetter + fixed.join("\n") + lastLetter);
-  }
+    const shuffledWord = firstLetter + newMiddle.join("\n") + lastLetter;
+    return shuffledWord;
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!text || text.length < 3) return;
+
+    const shuffledWord = shuffleLetters(text);
+    setText(shuffledWord);
+  };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -78,7 +34,9 @@ export default function Home() {
 
     try {
       const txt = await file.text();
-      setText(txt);
+      if (txt.length < 3) setText(txt);
+      const shuffledText = shuffleLetters(txt);
+      setText(shuffledText);
     } catch (err) {
       console.error(err);
       setText("");
