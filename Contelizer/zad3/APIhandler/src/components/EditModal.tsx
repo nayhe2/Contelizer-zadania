@@ -18,7 +18,7 @@ export default function EditModal({
   setShowModal,
   setEditedUser,
 }: editModalProps) {
-  const checkSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const checkSubmit = () => {
     if (
       editedUser.email &&
       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(editedUser.email)
@@ -49,7 +49,7 @@ export default function EditModal({
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            checkSubmit(e);
+            checkSubmit();
           }}
           className="flex flex-col gap-3"
         >

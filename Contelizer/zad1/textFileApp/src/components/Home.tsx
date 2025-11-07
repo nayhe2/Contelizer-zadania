@@ -51,43 +51,54 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen gap-4 p-4">
+    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-6">
       <form
-        className="flex flex-col items-center gap-4 w-full max-w-xl"
         onSubmit={handleSubmit}
+        className="bg-white shadow-lg rounded-2xl p-6 flex flex-col gap-6 w-full max-w-xl border border-gray-200"
       >
+        <h1 className="text-2xl font-semibold text-center text-gray-700">
+          Shuffle and Save Text
+        </h1>
+
         {text && (
-          <div className="w-full">
-            <textarea
-              className="resize-none border rounded-md border-gray-300 w-full h-64 sm:h-80 md:h-96 p-2 overflow-auto"
-              value={text}
-              readOnly={true}
-            ></textarea>
-          </div>
+          <textarea
+            className="resize-none border border-gray-300 rounded-lg w-full h-64 sm:h-80 md:h-96 p-3 font-mono text-sm text-gray-800 focus:outline-none"
+            value={text}
+            readOnly
+          ></textarea>
         )}
 
-        <div className="border">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+          <label
+            htmlFor="file"
+            className="cursor-pointer w-full sm:w-auto px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg border border-gray-300 transition"
+          >
+            Choose File
+          </label>
           <input
             id="file"
             type="file"
-            className="w-full sm:w-auto"
+            className="hidden"
             onChange={handleFileChange}
           />
-        </div>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-600 w-full sm:w-auto"
-        >
-          Shuffle
-        </button>
-      </form>
 
-      <button
-        onClick={handleSave}
-        className="px-4 py-2 bg-green-400 text-white rounded hover:bg-green-600 w-full sm:w-auto"
-      >
-        Save
-      </button>
+          <div className="flex gap-3 w-full sm:w-auto">
+            <button
+              type="submit"
+              className="flex-1 cursor-pointer sm:flex-none px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow transition"
+            >
+              Shuffle
+            </button>
+            <button
+              onClick={handleSave}
+              type="button"
+              className="flex-1 cursor-pointer sm:flex-none px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow transition"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   );
 }
