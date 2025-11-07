@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import validator from "validator";
+
+type statusType = "IS VALID" | "IS INVALID";
 
 export default function Home() {
   const [pesel, setPesel] = useState("");
+  const [status, setStatus] = useState<statusType | "">("");
 
   const calculateControlDigitAndCheck = (): boolean => {
     let sum = 0;
@@ -53,32 +55,55 @@ export default function Home() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = validatePesel();
-    result
-      ? window.alert("pesel zgodny" + pesel)
-      : window.alert("niepoprawny pesel " + pesel);
+    result ? setStatus("IS VALID") : setStatus("IS INVALID");
   };
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen gap-4 p-4">
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 px-4">
       <form
-        action="submit"
-        className="flex flex-col gap-5"
         onSubmit={handleSubmit}
+        className="flex flex-col space-y-4  w-full max-w-sm bg-white p-6 rounded-2xl shadow-md border border-gray-100"
       >
-        <input
-          type="text"
-          value={pesel}
-          onChange={handleChange}
-          className="outline-2 outline-offset-2 outline-solid"
-        ></input>
-        <div className="flex flex-wrap items-center justify-center gap-2 md:flex-row">
-          <Button
-            className="hover:bg-amber-50 text-amber-900 border-amber-300"
-            variant="outline"
-          >
-            Sprawdz pesel
-          </Button>
+        <h1 className="text-xl font-semibold text-gray-800 text-center">
+          PESEL Validator
+        </h1>
+
+        <div className="flex flex-col gap-2">
+          <label htmlFor="pesel" className="text-gray-600 text-sm font-medium">
+            PESEL
+          </label>
+
+          <input
+            id="pesel"
+            type="text"
+            value={pesel}
+            onChange={handleChange}
+            placeholder="Enter 11 digits"
+            className="px-3 py-2 mb-2 border border-gray-300 rounded-lg text-gray-800 
+                   focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"
+          />
+
+          <div className="h-6 flex justify-center items-center">
+            {status && (
+              <span
+                className={`text-sm font-semibold ${
+                  status === "IS VALID"
+                    ? "text-green-600 bg-green-100 px-3 py-0.5 rounded-md"
+                    : "text-red-600 bg-red-100 px-3 py-0.5 rounded-md"
+                }`}
+              >
+                {status === "IS VALID" ? "PESEL is valid" : "PESEL is invalid"}
+              </span>
+            )}
+          </div>
         </div>
+
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition w-full"
+        >
+          Check PESEL
+        </button>
       </form>
     </div>
   );
