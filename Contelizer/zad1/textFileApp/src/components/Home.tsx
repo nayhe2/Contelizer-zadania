@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import FileSaver from "file-saver";
 
-export default function Home() {
+const Home = () => {
   const [text, setText] = useState<string>("");
 
   const shuffleLetters = (text: string): string => {
@@ -47,7 +47,7 @@ export default function Home() {
     var blob = new Blob([text], {
       type: "text/plain;charset=utf-8",
     });
-    FileSaver.saveAs(blob, "nowy_tekst.txt");
+    FileSaver.saveAs(blob, "new_text.txt");
   };
 
   return (
@@ -101,4 +101,6 @@ export default function Home() {
       </form>
     </div>
   );
-}
+};
+
+export default Home;

@@ -3,8 +3,7 @@ import axiosInstance from "../api/axiosInstance";
 import type User from "../types";
 import EditModal from "./EditModal";
 import UserTable from "./UserTable";
-
-export default function Users(props: any) {
+const Users = (props: any) => {
   const [users, setUsers] = useState<User[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState<User>();
@@ -66,4 +65,6 @@ export default function Users(props: any) {
       )}
     </>
   );
-}
+};
+
+export default Users;

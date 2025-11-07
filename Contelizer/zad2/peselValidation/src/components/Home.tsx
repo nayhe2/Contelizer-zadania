@@ -3,7 +3,7 @@ import validator from "validator";
 
 type statusType = "IS VALID" | "IS INVALID";
 
-export default function Home() {
+const Home = () => {
   const [pesel, setPesel] = useState("");
   const [status, setStatus] = useState<statusType | "">("");
 
@@ -107,4 +107,6 @@ export default function Home() {
       </form>
     </div>
   );
-}
+};
+
+export default Home;

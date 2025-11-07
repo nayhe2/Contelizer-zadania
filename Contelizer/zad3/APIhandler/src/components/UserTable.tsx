@@ -7,7 +7,7 @@ type UserTableProps = {
   handleChanges: (user: User) => void;
 };
 
-export default function UserTable({ handleChanges, users }: UserTableProps) {
+const UserTable = ({ handleChanges, users }: UserTableProps) => {
   return (
     <div className="w-full overflow-x-auto  border border-gray-300 shadow-sm">
       <Table className=" w-full bg-white text-sm sm:text-base">
@@ -71,4 +71,6 @@ export default function UserTable({ handleChanges, users }: UserTableProps) {
       </Table>
     </div>
   );
-}
+};
+
+export default UserTable;

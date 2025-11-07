@@ -1,4 +1,4 @@
-export default function Navbar(props: any) {
+const Navbar = (props: any) => {
   return (
     <div>
       <form className="max-w-md mx-auto">
@@ -26,7 +26,7 @@ export default function Navbar(props: any) {
           <input
             type="search"
             id="default-search"
-            className="block w-full px-7 py-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
+            className="block w-full px-20 py-4 ps-10 text-sm text-gray-900 border border-gray-300  bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
             placeholder="Search name"
             required
             value={props.inputVal}
@@ -38,4 +38,6 @@ export default function Navbar(props: any) {
       </form>
     </div>
   );
-}
+};
+
+export default Navbar;

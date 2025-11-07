@@ -3,7 +3,7 @@ import Users from "./Users";
 import Navbar from "./Navbar";
 import { useDebounce } from "use-debounce";
 
-export default function Home() {
+const Home = () => {
   const [inputVal, setInputVal] = useState("");
   const [debouncedValue] = useDebounce(inputVal, 200);
 
@@ -21,4 +21,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default Home;

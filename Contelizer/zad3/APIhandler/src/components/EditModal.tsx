@@ -1,5 +1,5 @@
 import type User from "../types";
-import type { Dispatch, SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 
 type editModalProps = {
   users: User[];
@@ -11,33 +11,54 @@ type editModalProps = {
   setEditedUser: Dispatch<SetStateAction<Partial<User>>>;
 };
 
-export default function EditModal({
+type errorType = {
+  email: boolean;
+  name: boolean;
+};
+
+const EditModal = ({
   editedUser,
   editingUser,
   handleEditRequest,
   setShowModal,
   setEditedUser,
-}: editModalProps) {
+}: editModalProps) => {
+  const [errors, setErrors] = useState<errorType>({
+    email: false,
+    name: false,
+  });
   const checkSubmit = () => {
-    if (
-      editedUser.email &&
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(editedUser.email)
-    ) {
-      alert("invalid e-mail");
-      return;
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    const nameRegex =
+      /^[A-Za-zÀ-ÖØ-öø-ÿĄĆĘŁŃÓŚŹŻąćęłńóśźż]+\.?\s?([A-Za-zÀ-ÖØ-öø-ÿĄĆĘŁŃÓŚŹŻąćęłńóśźż]+([.\s-]?[A-Za-zÀ-ÖØ-öø-ÿĄĆĘŁŃÓŚŹŻąćęłńóśźż]+)*)?$/;
+
+    let hasError = false;
+
+    if (editedUser.email && !emailRegex.test(editedUser.email)) {
+      setErrors((prev) => ({ ...prev, email: true }));
+      hasError = true;
+    } else {
+      setErrors((prev) => ({ ...prev, email: false }));
     }
-    if (
-      editedUser.name &&
-      !/^[A-Za-zÀ-ÖØ-öø-ÿĄĆĘŁŃÓŚŹŻąćęłńóśźż]+\.?\s?([A-Za-zÀ-ÖØ-öø-ÿĄĆĘŁŃÓŚŹŻąćęłńóśźż]+([.\s-]?[A-Za-zÀ-ÖØ-öø-ÿĄĆĘŁŃÓŚŹŻąćęłńóśźż]+)*)?$/.test(
-        editedUser.name
-      )
-    ) {
-      alert("Forbidden characters in name");
+
+    if (editedUser.name && !nameRegex.test(editedUser.name)) {
+      setErrors((prev) => ({ ...prev, name: true }));
+      hasError = true;
+    } else {
+      setErrors((prev) => ({ ...prev, name: false }));
+    }
+
+    if (hasError) {
       return;
     }
 
-    handleEditRequest(editingUser!);
+    if (!editingUser) {
+      return;
+    }
+
+    handleEditRequest(editingUser);
     setShowModal(false);
+    setErrors({ email: false, name: false });
   };
   return (
     <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/50 px-4 sm:px-6 md:px-8">
@@ -53,70 +74,83 @@ export default function EditModal({
           }}
           className="flex flex-col gap-3"
         >
-          <label htmlFor="name">Name</label>
-          <input
-            id="name"
-            placeholder={editingUser?.name}
-            required
-            className="border rounded-md px-3 py-2 text-sm sm:text-base"
-            value={editedUser.name || ""}
-            onChange={(e) =>
-              setEditedUser((prev: Partial<User>) => ({
-                ...prev,
-                name: e.target.value,
-              }))
-            }
-          />
+          <div className="flex flex-col gap-1">
+            <label htmlFor="name">Name</label>
+            <input
+              id="name"
+              placeholder={editingUser?.name}
+              required
+              className="border rounded-md px-3 py-2 text-sm sm:text-base"
+              value={editedUser.name || ""}
+              onChange={(e) =>
+                setEditedUser((prev: Partial<User>) => ({
+                  ...prev,
+                  name: e.target.value,
+                }))
+              }
+            />
+            <div className="text-red-600 h-2 text-sm">
+              {errors.name && "forbidden characters in name"}
+            </div>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              placeholder={editingUser?.email}
+              required
+              className="border rounded-md px-3 py-2 text-sm sm:text-base"
+              value={editedUser.email || ""}
+              onChange={(e) =>
+                setEditedUser((prev: Partial<User>) => ({
+                  ...prev,
+                  email: e.target.value,
+                }))
+              }
+            />
+            <div className="text-red-600 h-2 text-sm">
+              {errors.email && "forbidden characters in email"}
+            </div>
+          </div>
 
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            placeholder={editingUser?.email}
-            required
-            className="border rounded-md px-3 py-2 text-sm sm:text-base"
-            value={editedUser.email || ""}
-            onChange={(e) =>
-              setEditedUser((prev: Partial<User>) => ({
-                ...prev,
-                email: e.target.value,
-              }))
-            }
-          />
-          <label htmlFor="gender">Gender</label>
-          <select
-            id="gender"
-            value={editedUser.gender || ""}
-            required
-            className="border rounded-md px-3 py-2 text-sm sm:text-base"
-            onChange={(e) =>
-              setEditedUser((prev: Partial<User>) => ({
-                ...prev,
-                gender: e.target.value,
-              }))
-            }
-          >
-            <option value="male">male</option>
-            <option value="female">female</option>
-          </select>
+          <div className="flex flex-col gap-1 mb-3">
+            <label htmlFor="gender">Gender</label>
+            <select
+              id="gender"
+              value={editedUser.gender || ""}
+              required
+              className="border rounded-md px-3 py-2 text-sm sm:text-base"
+              onChange={(e) =>
+                setEditedUser((prev: Partial<User>) => ({
+                  ...prev,
+                  gender: e.target.value,
+                }))
+              }
+            >
+              <option value="male">male</option>
+              <option value="female">female</option>
+            </select>
+          </div>
 
-          <label htmlFor="status">Status</label>
-          <select
-            id="status"
-            value={editedUser.status || ""}
-            required
-            className="border rounded-md px-3 py-2 text-sm sm:text-base"
-            onChange={(e) =>
-              setEditedUser((prev: Partial<User>) => ({
-                ...prev,
-                status: e.target.value,
-              }))
-            }
-          >
-            <option value="active">active</option>
-            <option value="inactive">inactive</option>
-          </select>
-
+          <div className="flex flex-col gap-1 mb-2">
+            <label htmlFor="status">Status</label>
+            <select
+              id="status"
+              value={editedUser.status || ""}
+              required
+              className="border rounded-md px-3 py-2 text-sm sm:text-base"
+              onChange={(e) =>
+                setEditedUser((prev: Partial<User>) => ({
+                  ...prev,
+                  status: e.target.value,
+                }))
+              }
+            >
+              <option value="active">active</option>
+              <option value="inactive">inactive</option>
+            </select>
+          </div>
           <div className="flex flex-col sm:flex-row gap-2 mt-4">
             <button
               type="button"
@@ -136,4 +170,6 @@ export default function EditModal({
       </div>
     </div>
   );
-}
+};
+
+export default EditModal;
