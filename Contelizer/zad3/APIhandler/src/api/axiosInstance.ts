@@ -10,8 +10,4 @@ const axiosInstance = axios.create({
   },
 });
 
-if (apiKey) {
-  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${apiKey}`;
-}
-
 export default axiosInstance;
